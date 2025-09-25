@@ -32,7 +32,7 @@ cp mongo.repo /etc/yum.repos.d/mongo.repo
 dnf install mongodb-org -y &>> $LOG_FILE
 VALIDATE $? "Adding mongo repo"
 
-systemctl enable mongod
+systemctl enable mongod &>> $LOG_FILE
 VALIDATE $? "Enable mongod"
 
 systemctl start mongod
