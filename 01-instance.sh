@@ -13,4 +13,5 @@ do
     else
         IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
     fi
+    echo "$INSTANCE_ID : $IP"
 done
