@@ -48,6 +48,7 @@ if [ $? -ne 0];then
     VALIDATE $? "Creating System user"
 else
     echo -e "User already exists ...... $Y Skipping $N" | tee -a $LOG_FILE
+fi
 
 mkdir -p /app 
 VALIDATE $? "Creating app directory"
@@ -85,5 +86,4 @@ dnf install mongodb-mongosh -y &>> $LOG_FILE
 VALIDATE $? "Installing mongosh client"
 
 mongosh --host $MONGODB_HOST </app/db/master-data.js
-VALIDATE $? "Loading master data" 
-
+VALIDATE $? "Loading master data"
