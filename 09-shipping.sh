@@ -63,7 +63,7 @@ VALIDATE $? "unzipping code"
 mvn clean package &>> $LOG_FILE
 VALIDATE $? "Installing dependencies and building artifacts"
 
-mv target/shipping-1.0.jar.original shipping.jar
+mv target/shipping-1.0.jar shipping.jar
 VALIDATE $? "Moving .jar file into app directory"
 
 cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service
