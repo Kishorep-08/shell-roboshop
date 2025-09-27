@@ -49,7 +49,7 @@ if [ $? -ne 0];then
 else
     echo -e "User already exists ...... $Y Skipping $N" | tee -a $LOG_FILE
 
-mkdir /app 
+mkdir -p /app 
 VALIDATE $? "Creating app directory"
 
 ############ Application code setup ############
