@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -exo pipefail
+set -euo pipefail
 
 trap 'echo "There is an error at $LINENO and command is: $BASH_COMMAND"' ERR
 
@@ -55,7 +55,7 @@ systemctl start catalogue &>> $LOG_FILE
 ########## Mongosh client setup ##########
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
 dnf install mongodb-mongosh -y &>> $LOG_FILE
-INDEX=$(mongosh mongodb.daws86s.fun --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')")
+INDEX=$(mongosh mongodb.kishore-p.space --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')")
 if [ $INDEX -le 0 ];then
     mongosh --host $MONGODB_HOSTs </app/db/master-data.js &>>$LOG_FILE
 else
