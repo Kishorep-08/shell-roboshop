@@ -35,7 +35,7 @@ VALIDATE $? "Adding mongo repo"
 systemctl enable mongod &>> $LOG_FILE
 VALIDATE $? "Enable MongoDB"
 
-systemctl start MongoDB
+systemctl start mongod
 VALIDATE $? "Starting MongoDB"
 
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
