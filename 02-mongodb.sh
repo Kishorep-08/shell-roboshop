@@ -33,7 +33,13 @@ dnf install mongodb-org -y &>> $LOG_FILE
 VALIDATE $? "Adding mongo repo"
 
 systemctl enable mongod &>> $LOG_FILE
-VALIDATE $? "Enable mongod"
+VALIDATE $? "Enable MongoDB"
 
-systemctl start mongod
-VALIDATE $? "Starting mongod"
+systemctl start MongoDB
+VALIDATE $? "Starting MongoDB"
+
+sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
+VALIDATE $? "Making MongoDB accessible to all IPs"
+
+systemctl restart mongod
+VALIDATE $? "Restarting MongoDB"
