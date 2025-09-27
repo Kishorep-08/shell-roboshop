@@ -22,10 +22,10 @@ fi
 VALIDATE(){
     if [ $1 -ne 0 ]
     then
-        echo -e "$R Error $N: Installing $2 got failed" | tee -a $LOG_FILE
+        echo -e "$R Error $N: $2 got failed" | tee -a $LOG_FILE
         exit 1
     else
-        echo -e "Installating $2......$G Success $N" | tee -a $LOG_FILE
+        echo -e "$2......$G Success $N" | tee -a $LOG_FILE
     fi
 }
 
@@ -37,7 +37,7 @@ dnf module enable nodejs:20 -y &>> $LOG_FILE
 VALIDATE $? "Enabling nodesjs:20"
 
 dnf install nodejs -y &>> $LOG_FILE
-VALIDATE$? "Installing nodejs"
+VALIDATE $? "Installing nodejs"
 
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $LOG_FILE
 VALIDATE $? "Adding System user"
@@ -58,7 +58,7 @@ VALIDATE $? "unzipping code"
 npm install &>> $LOG_FILE
 VALIDATE $? "Installing dependencies"
 
-cp catalogue.service /etc/systemd/system/catalogue.service
+cp ~/shell-roboshop/catalogue.service /etc/systemd/system/catalogue.service
 VALIDATE $? "Creating catalogue service"
 
 systemctl daemon-reload
