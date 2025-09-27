@@ -1,0 +1,80 @@
+#!/bin/bash
+
+USERID=$(id -u)
+R="\e[31m"
+G="\e[32m"
+Y="\e[33m"
+N="\e[0m"
+LOGS_FOLDER="/var/log/shell-script-logs"
+SCRIPT_NAME=$(echo "$0" | awk -F. '{print$1}')
+LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
+MONGODB_HOST=mongodb.kishore-p.space
+
+mkdir -p $LOGS_FOLDER
+
+if [ $USERID -ne 0 ]
+then
+    echo -e "$R Error $N: Install with root privileges" | tee -a $LOG_FILE
+    exit 1
+fi
+
+
+VALIDATE(){
+    if [ $1 -ne 0 ]
+    then
+        echo -e "$R Error $N: Installing $2 got failed" | tee -a $LOG_FILE
+        exit 1
+    else
+        echo -e "Installating $2......$G Success $N" | tee -a $LOG_FILE
+    fi
+}
+
+######## NodeJS Setup #########
+dnf module disable nodejs -y &>> $LOG_FILE
+VALIDATE $? "Disabling default nodejs"
+
+dnf module enable nodejs:20 -y &>> $LOG_FILE
+VALIDATE $? "Enabling nodesjs:20"
+
+dnf install nodejs -y &>> $LOG_FILE
+VALIDATE$? "Installing nodejs"
+
+useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $LOG_FILE
+VALIDATE $? "Adding System user"
+
+mkdir /app 
+VALIDATE $? "Creating app directory"
+
+
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>> $LOG_FILE
+VALIDATE $? "Downloading code"
+
+cd /app 
+VALIDATE $? "Changing to app directory"
+
+unzip /tmp/catalogue.zip &>> $LOG_FILE
+VALIDATE $? "unzipping code"
+
+npm install &>> $LOG_FILE
+VALIDATE $? "Installing dependencies"
+
+cp catalogue.service /etc/systemd/system/catalogue.service
+VALIDATE $? "Creating catalogue service"
+
+systemctl daemon-reload
+
+systemctl enable catalogue &>> $LOG_FILE
+VALIDATE $? "Enabling catalogue service"
+
+systemctl start catalogue &>> $LOG_FILE
+VALIDATE $? "Starting catalogue service"
+
+cp mongo.service /etc/yum.repos.d/mongo.repo
+VALIDATE $? "Creatinng mongo repo"
+
+dnf install mongodb-mongosh -y &>> $LOG_FILE
+VALIDATE $? "Installing mongosh client"
+
+mongosh --host $MONGODB_HOST </app/db/master-data.js
+VALIDATE $? "Loading master data" 
+
