@@ -40,7 +40,7 @@ fi
 mkdir -p /app 
 
 ############ Application code setup ############
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>> $LOG_FILE
+curl -o /tmp/catalogueee.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>> $LOG_FILE
 cd /app 
 rm -rf /app/*
 unzip  /tmp/catalogue.zip &>> $LOG_FILE
@@ -57,7 +57,7 @@ cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
 dnf install mongodb-mongosh -y &>> $LOG_FILE
 INDEX=$(mongosh mongodb.kishore-p.space --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')")
 if [ $INDEX -le 0 ];then
-    mongosh --host $MONGODB_HOSTs </app/db/master-data.js &>>$LOG_FILE
+    mongosh --host $MONGODB_HOST </app/db/master-data.js &>>$LOG_FILE
 else
     echo -e "Catalogue products already loaded ... $Y SKIPPING $N"
 fi
