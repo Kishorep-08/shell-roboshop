@@ -80,13 +80,14 @@ VALIDATE $? "Starting shipping service"
 dnf install mysql -y &>> $LOG_FILE
 VALIDATE $? "Installing mysql client"
 
-mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e 'use cities'
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e 'use cities' &>> $LOG_FILE
 if [ $? -ne 0 ]; then
     mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/schema.sql
     mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/app-user.sql 
     mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/master-data.sql
 else
-    echo -e "Schema already exists ...... $Y Skipping $N"
+    echo -e "hipping data is already loaded ...... $Y Skipping $N"
+fi
 
 systemctl restart shipping
 
