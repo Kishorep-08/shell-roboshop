@@ -71,10 +71,10 @@ VALIDATE $? "Creating shipping service "
 
 systemctl daemon-reload
 
-systemctl enable cart &>> $LOG_FILE
+systemctl enable shipping &>> $LOG_FILE
 VALIDATE $? "Enabling shipping service"
 
-systemctl start cart &>> $LOG_FILE
+systemctl start shipping &>> $LOG_FILE
 VALIDATE $? "Starting shipping service"
 
 dnf install mysql -y &>> $LOG_FILE
