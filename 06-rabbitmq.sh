@@ -29,6 +29,7 @@ VALIDATE(){
 }
 
 cp rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
+VALIDATE $? "Adding rabbitmq repo"
 
 echo
 
