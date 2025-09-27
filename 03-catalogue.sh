@@ -10,6 +10,7 @@ SCRIPT_NAME=$(echo "$0" | awk -F. '{print$1}')
 SCRIPT_DIR=$PWD
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
 MONGODB_HOST=mongodb.kishore-p.space
+START_TIME=$(date +%s)
 
 mkdir -p $LOGS_FOLDER
 
@@ -99,3 +100,7 @@ fi
 systemctl restart catalogue
 VALIDATE $? "Restarted catalogue"
 
+END_TIME=$(date +%s)
+TOTAL_TIME=$(($END_TIME - $START_TIME))
+
+echo -e  "Script Executed in $Y $TOTAL_TIME seconds $N"
