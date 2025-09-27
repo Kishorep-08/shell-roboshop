@@ -63,7 +63,7 @@ VALIDATE $? "unzipping code"
 mvn clean package &>> $LOG_FILE
 VALIDATE $? "Installing dependencies and building artifacts"
 
-mv target/shipping-1.0.jar $SCRIPT_DIR/shipping.jar
+mv target/shipping-1.0.jar.original $SCRIPT_DIR/shipping.jar
 VALIDATE $? "Moving .jar file into app directory"
 
 cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service
@@ -86,7 +86,7 @@ if [ $? -ne 0 ]; then
     mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/app-user.sql &>> $LOG_FILE
     mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/master-data.sql &>> $LOG_FILE
 else
-    echo -e "hipping data is already loaded ...... $Y Skipping $N"
+    echo -e "shipping data is already loaded ...... $Y Skipping $N"
 fi
 
 systemctl restart shipping
