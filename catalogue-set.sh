@@ -37,10 +37,10 @@ else
     echo -e "User already exists ...... $Y Skipping $N" | tee -a $LOG_FILE
 fi
 
-mkdir -p /app 
+mkdirtr -p /app 
 
 ############ Application code setup ############
-curl -o /tmp/catalogueee.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>> $LOG_FILE
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>> $LOG_FILE
 cd /app 
 rm -rf /app/*
 unzip  /tmp/catalogue.zip &>> $LOG_FILE
