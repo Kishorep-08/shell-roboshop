@@ -7,6 +7,7 @@ Y="\e[33m"
 N="\e[0m"
 LOGS_FOLDER="/var/log/shell-script-logs"
 SCRIPT_NAME=$(echo "$0" | awk -F. '{print$1}')
+SCRIPT_DIR=$PWD
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
 MONGODB_HOST=mongodb.kishore-p.space
 
@@ -39,13 +40,19 @@ VALIDATE $? "Enabling nodesjs:20"
 dnf install nodejs -y &>> $LOG_FILE
 VALIDATE $? "Installing nodejs"
 
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $LOG_FILE
-VALIDATE $? "Adding System user"
+################ Creating System user ################
+
+id roboshop &>> $LOG_FILE
+if [ $? -ne 0];then
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $LOG_FILE
+    VALIDATE $? "Creating System user"
+else
+    echo -e "User already exists ...... $Y Skipping $N" | tee -a $LOG_FILE
 
 mkdir /app 
 VALIDATE $? "Creating app directory"
 
-
+############ Application code setup ############
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>> $LOG_FILE
 VALIDATE $? "Downloading code"
 
@@ -58,7 +65,8 @@ VALIDATE $? "unzipping code"
 npm install &>> $LOG_FILE
 VALIDATE $? "Installing dependencies"
 
-cp ~/shell-roboshop/catalogue.service /etc/systemd/system/catalogue.service
+############ Catalogue service setup ############
+cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
 VALIDATE $? "Creating catalogue service"
 
 systemctl daemon-reload
@@ -69,7 +77,8 @@ VALIDATE $? "Enabling catalogue service"
 systemctl start catalogue &>> $LOG_FILE
 VALIDATE $? "Starting catalogue service"
 
-cp mongo.service /etc/yum.repos.d/mongo.repo
+########## Mongosh client setup ##########
+cp $SCRIPT_DIR/mongo.service /etc/yum.repos.d/mongo.repo
 VALIDATE $? "Creatinng mongo repo"
 
 dnf install mongodb-mongosh -y &>> $LOG_FILE
