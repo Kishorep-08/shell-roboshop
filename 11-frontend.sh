@@ -67,7 +67,13 @@ unzip /tmp/frontend.zip &>> $LOG_FILE
 VALIDATE $? "Unzipping code"
 
 rm -rf /etc/nginx/nginx.conf
+
 cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
 VALIDATE $? "Copying nginx configuration"
 
 systemctl restart nginx 
+
+END_TIME=$(date +%s)
+TOTAL_TIME=$(($END_TIME - $START_TIME))
+
+echo -e  "Script Executed in $Y $TOTAL_TIME seconds $N"
