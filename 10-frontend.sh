@@ -31,6 +31,8 @@ VALIDATE(){
     fi
 }
 
+
+
 ################ Creating System user ################
 
 id roboshop &>> $LOG_FILE
